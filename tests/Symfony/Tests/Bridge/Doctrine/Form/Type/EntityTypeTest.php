@@ -679,6 +679,25 @@ class EntityTypeTest extends TypeTestCase
         $this->assertSame('0', $field->getClientData());
     }
 
+    public function testBindEmptyChoiceWithQueryBuilderSingleIdentifier()
+    {
+        $repository = $this->em->getRepository(self::SINGLE_IDENT_CLASS);
+
+        $field = $this->factory->createNamed('entity', 'name', null, array(
+            'em' => 'default',
+            'class' => self::SINGLE_IDENT_CLASS,
+            'query_builder' => $repository->createQueryBuilder('e'),
+            'property' => 'name',
+            'multiple' => true,
+            'required' => false,
+        ));
+
+        $field->bind(array());
+
+        $this->assertTrue($field->isSynchronized());
+        $this->assertNotNull($field->getData());
+    }
+
     protected function createRegistryMock($name, $em)
     {
         $registry = $this->getMock('Doctrine\Common\Persistence\ManagerRegistry');
